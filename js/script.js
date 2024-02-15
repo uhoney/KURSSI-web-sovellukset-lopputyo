@@ -5,7 +5,7 @@ let RATJson = {}
 let releaseYear
 let posterPath
 let latestID
-const loadingPicture = "./img/loadDummy.jpg"
+const loadingPicture = "./img/load_dummy2.png"
 const imageHandle = document.querySelector("#imageContainer img")
 const guessInputBox = document.querySelector("#guessInputField")
 const imageUrlBase = "https://image.tmdb.org/t/p/w1280"
@@ -20,7 +20,6 @@ document.addEventListener("DOMContentLoaded", async () => {
 	await loadAPIKEY()
 	await testApiKeyWorks()
 	await getLatestID()
-	resetImage()
 	await loadLoop()
 })
 
