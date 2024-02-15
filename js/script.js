@@ -1,8 +1,3 @@
-/*
-Yritin saada pilkottua skriptiä kahteen, mutta siitä syntyi muna-kana ongelma, jota en vain saanut toimimaan.
-Tämä on nyt lätkitty yhteen megaskriptiin, koska asynkronisten funktioiden takia se ei vaan toiminut.
-*/
-
 //
 // VARIABLES
 let TMDB_RAT = ""
@@ -15,19 +10,18 @@ const imageHandle = document.querySelector("#imageContainer img")
 const guessInputBox = document.querySelector("#guessInputField")
 const imageUrlBase = "https://image.tmdb.org/t/p/w1280"
 
-
-
 //
 // DOMCONTENTLOADED
+// A few test functions for apikeys and browser storage.
 document.addEventListener("DOMContentLoaded", async () => {
 	resetImage()
-	// testStorageSupport()
+	testStorageSupport()
 	checkAndCreateStorage()
 	await loadAPIKEY()
 	await testApiKeyWorks()
 	await getLatestID()
 	resetImage()
-	await gameLoop()
+	await loadLoop()
 })
 
 //
@@ -40,25 +34,27 @@ guessInputBox.addEventListener("keydown", (press) => {
 
 //
 // FUNCTIONS
+
+// Create new variables for storage if not exist already
 const checkAndCreateStorage = () => {
 	if (localStorage.getItem("guessTotal") === null) {
-		localStorage.setItem("guessTotal", Number(0))
+		localStorage.setItem("guessTotal", "0")
 	}
 	if (localStorage.getItem("guessCorrect") === null) {
-		localStorage.setItem("guessCorrect", Number(0))
+		localStorage.setItem("guessCorrect", "0")
 	}
 	if (localStorage.getItem("guessIncorrect") === null) {
-		localStorage.setItem("guessIncorrect", Number(0))
+		localStorage.setItem("guessIncorrect", "0")
 	}
 }
 
 
-// Ladataan tiedostosta API-avain >> Ei kovakoodausta niin ei mene vahingossa gittiin
-// Ei toiminu ilman await avainsanaa => odottaa, että komento toteutetaan
+// Load API-key from .txt file >> No hardcoding and accidentally post on git
+// Issues with asynchronous functions
 const loadAPIKEY = async () => {
 	try {
 		const tiedosto = await fetch("apikey.txt")
-		// ok on status koodi. Voi olla mitä vain välillä 200-299
+		// OK statuscode, can be anything from 200-299
 		if (!tiedosto.ok) {
 			throw new Error("ERR:: apikey.txt not found")
 		}
@@ -72,7 +68,9 @@ const loadAPIKEY = async () => {
 	}
 }
 
-// Näköjään melkein kaikki funktiot ja muuttujat pitää olla async tai muuten menee rikki
+// One async apparently forces every function to async
+// Could not get it to work without async everywhere
+// Function runs a test on server for a valid API-key
 const testApiKeyWorks = async () => {
 	try {
 		RATJson = {
@@ -82,9 +80,7 @@ const testApiKeyWorks = async () => {
 				Authorization: 'Bearer ' + TMDB_RAT
 			}
 		}
-		// Pyyntö serverille, testaa onko API-avain oikea
 		const response = await fetch('https://api.themoviedb.org/3/authentication', RATJson);
-		// ok on status koodi. Voi olla mitä vain välillä 200-299
 		if (!response.ok) {
 			throw new Error()
 		}
@@ -103,19 +99,13 @@ const testStorageSupport = () => {
 	}
 }
 
-// Jatkuvia ongelmia asynkronisten funktioiden kanssa..
-// En saanu muuten toimimaan yksinään..
-// const runTests = async () => {
-// 	await loadAPIKEY()
-// 	await testApiKeyWorks()
-// 	checkStorageSupport()
-// }
-
 const resetImage = () => {
 	// Initial load, dummy image
 	imageHandle.src = loadingPicture
 }
 
+// TMDB developers suggestion to get num of movies in database
+// WARN:: a movie ID is NOT guaranteed to be populated
 const getLatestID = async () => {
 	await fetch('https://api.themoviedb.org/3/movie/latest', RATJson)
 		.then(response => response.json())
@@ -125,15 +115,18 @@ const getLatestID = async () => {
 		.catch(err => console.error(err));
 }
 
+// Loads a random movie.
+// Run in a loop with 1sec delay on fetch until found a valid ID && valid properties
 const loadMovie = async () => {
 	while (true) {
 		try {
-			console.log("fetching new movie..")
-			const response = await fetch("https://api.themoviedb.org/3/movie/" + getRandomID() + "?language=en-US", RATJson)
+			const response = await fetch("https://api.themoviedb.org/3/movie/" + getRandomID(), RATJson)
+			// ID might not be populated == no entry on ID
 			if (!response.ok) {
-				throw new Error("something went wrong")
+				throw new Error()
 			}
 			const data = await response.json()
+			// Run checks if movie is valid == has wanted properties
 			if (checkIfValidKey(data, "release_date") &&
 				checkIfValidKey(data, "poster_path") &&
 				data["adult"] === false) {
@@ -142,37 +135,16 @@ const loadMovie = async () => {
 				break
 			}
 		} catch (err) {
-			console.error(err);
+			console.log("ERR:: No entry for this ID")
 		}
+
+		console.log("Conditions not met, fetching new movie..")
 
 		await new Promise(resolve => setTimeout(resolve, 1000)) // Delay for 1 second
 	}
 }
 
-
-// const loadMovie = async () => {
-// 	while (true) {
-// 		// await fetch("https://api.themoviedb.org/3/movie/348" + "?language=en-US", RATJson)
-// 		await fetch("https://api.themoviedb.org/3/movie/" + getRandomID() + "?language=en-US", RATJson)
-// 			.then(response => response.json())
-// 			.then(response => {
-// 				if (checkIfValidKey(response, "release_date") &&
-// 					checkIfValidKey(response, "poster_path") &&
-// 					response["adult"] === false) {
-// 					releaseYear = response.release_date.substring(0, 4)
-// 					posterPath = response.poster_path
-// 					break
-// 				}
-// 				else {
-// 					continue
-// 				}
-// 			})
-// 			.catch(err => {
-// 				console.error(err)
-// 			})
-// 	}
-// }
-
+// Check if parameter JSON contains wanted key and populated, return boolean
 const checkIfValidKey = (movie, key) => (
 	movie.hasOwnProperty(key) &&
 	movie[key] !== null &&
@@ -180,47 +152,47 @@ const checkIfValidKey = (movie, key) => (
 	movie[key] !== ""
 )
 
-
+// Change src of html element
 const loadImage = () => {
 	imageHandle.src = imageUrlBase + posterPath
 }
 
+// Add +1 to parameter value in storage, handles all storage values
 const addToStorageValue = (storageValue) => {
 	let tmp = localStorage.getItem(storageValue)
 	tmp = Number(tmp) + 1
 	localStorage.setItem(storageValue, tmp)
 }
 
+// Handles stats for game.
 const handleAnswer = () => {
 	if (guessCorrect()) {
 		console.log("Correct!")
 		addToStorageValue("guessCorrect")
 	}
 	else {
-		console.log("Incorrect. The year was " + releaseYear)
+		console.log("Incorrect. The release year was " + releaseYear)
 		addToStorageValue("guessIncorrect")
 	}
 	addToStorageValue("guessTotal")
 
-	imageHandle.src = loadingPicture
-	guessInputBox.value = ""
-	guessInputBox.style.display = "none"
-	gameLoop()
+	loadLoop()
 }
 
 const getRandomID = () => {
 	return Math.floor(Math.random() * (latestID + 1))
 }
 
+// Returns boolean, suprisingly catches invalid inputs as false
 const guessCorrect = () => {
-	// This had a 10 line try-catch block, but it seems this does the same job
-	// I could not get it to throw an error with any input..
 	return Number(guessInputBox.value) === Number(releaseYear)
 }
 
-const gameLoop = async () => {
-	// guessInputBox.style.display = "none"
-
+// "gameLoop" but not really
+const loadLoop = async () => {
+	guessInputBox.style.display = "none"
+	imageHandle.src = loadingPicture
+	guessInputBox.value = ""
 	await loadMovie()
 	loadImage()
 	guessInputBox.style.display = "block"
