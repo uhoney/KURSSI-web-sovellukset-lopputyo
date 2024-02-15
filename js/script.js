@@ -9,20 +9,24 @@ let TMDB_RAT = ""
 let RATJson = {}
 let releaseYear
 let posterPath
+let latestID
 const loadingPicture = "./img/loadDummy.jpg"
 const imageHandle = document.querySelector("#imageContainer img")
 const guessInputBox = document.querySelector("#guessInputField")
 const imageUrlBase = "https://image.tmdb.org/t/p/w1280"
 
 
+
 //
 // DOMCONTENTLOADED
 document.addEventListener("DOMContentLoaded", async () => {
-	guessInputBox.style.display = "none"
 	resetImage()
+	// testStorageSupport()
+	checkAndCreateStorage()
 	await loadAPIKEY()
 	await testApiKeyWorks()
-	testStorageSupport()
+	await getLatestID()
+	resetImage()
 	await gameLoop()
 })
 
@@ -36,6 +40,18 @@ guessInputBox.addEventListener("keydown", (press) => {
 
 //
 // FUNCTIONS
+const checkAndCreateStorage = () => {
+	if (localStorage.getItem("guessTotal") === null) {
+		localStorage.setItem("guessTotal", Number(0))
+	}
+	if (localStorage.getItem("guessCorrect") === null) {
+		localStorage.setItem("guessCorrect", Number(0))
+	}
+	if (localStorage.getItem("guessIncorrect") === null) {
+		localStorage.setItem("guessIncorrect", Number(0))
+	}
+}
+
 
 // Ladataan tiedostosta API-avain >> Ei kovakoodausta niin ei mene vahingossa gittiin
 // Ei toiminu ilman await avainsanaa => odottaa, että komento toteutetaan
@@ -100,40 +116,100 @@ const resetImage = () => {
 	imageHandle.src = loadingPicture
 }
 
-const loadMovie = async (movieID) => {
-	await fetch("https://api.themoviedb.org/3/movie/" + movieID + "?language=en-US", RATJson)
+const getLatestID = async () => {
+	await fetch('https://api.themoviedb.org/3/movie/latest', RATJson)
 		.then(response => response.json())
-		// .then(response => console.log(response["release_date"]))
-		// TODO: Check if exists
-		// TODO: Check for adult, release_date, poster_path
 		.then(response => {
-			releaseYear = response.release_date.substring(0, 4)
-			posterPath = response.poster_path
+			latestID = Number(response.id)
 		})
-		.catch(err => console.error(err))
+		.catch(err => console.error(err));
 }
+
+const loadMovie = async () => {
+	while (true) {
+		try {
+			console.log("fetching new movie..")
+			const response = await fetch("https://api.themoviedb.org/3/movie/" + getRandomID() + "?language=en-US", RATJson)
+			if (!response.ok) {
+				throw new Error("something went wrong")
+			}
+			const data = await response.json()
+			if (checkIfValidKey(data, "release_date") &&
+				checkIfValidKey(data, "poster_path") &&
+				data["adult"] === false) {
+				releaseYear = data.release_date.substring(0, 4)
+				posterPath = data.poster_path
+				break
+			}
+		} catch (err) {
+			console.error(err);
+		}
+
+		await new Promise(resolve => setTimeout(resolve, 1000)) // Delay for 1 second
+	}
+}
+
+
+// const loadMovie = async () => {
+// 	while (true) {
+// 		// await fetch("https://api.themoviedb.org/3/movie/348" + "?language=en-US", RATJson)
+// 		await fetch("https://api.themoviedb.org/3/movie/" + getRandomID() + "?language=en-US", RATJson)
+// 			.then(response => response.json())
+// 			.then(response => {
+// 				if (checkIfValidKey(response, "release_date") &&
+// 					checkIfValidKey(response, "poster_path") &&
+// 					response["adult"] === false) {
+// 					releaseYear = response.release_date.substring(0, 4)
+// 					posterPath = response.poster_path
+// 					break
+// 				}
+// 				else {
+// 					continue
+// 				}
+// 			})
+// 			.catch(err => {
+// 				console.error(err)
+// 			})
+// 	}
+// }
+
+const checkIfValidKey = (movie, key) => (
+	movie.hasOwnProperty(key) &&
+	movie[key] !== null &&
+	movie[key] !== undefined &&
+	movie[key] !== ""
+)
+
 
 const loadImage = () => {
 	imageHandle.src = imageUrlBase + posterPath
 }
 
-const handleAnswer = () => {
+const addToStorageValue = (storageValue) => {
+	let tmp = localStorage.getItem(storageValue)
+	tmp = Number(tmp) + 1
+	localStorage.setItem(storageValue, tmp)
+}
 
-	//
-	// TODO: Handle correct/incorrect
+const handleAnswer = () => {
 	if (guessCorrect()) {
-		console.log("correct!")
+		console.log("Correct!")
+		addToStorageValue("guessCorrect")
 	}
 	else {
-		console.log("yeas was " + releaseYear)
+		console.log("Incorrect. The year was " + releaseYear)
+		addToStorageValue("guessIncorrect")
 	}
-	//
-	// TODO: add stats
-	//
-	// TODO: run correct/incorrect status update
+	addToStorageValue("guessTotal")
+
 	imageHandle.src = loadingPicture
 	guessInputBox.value = ""
+	guessInputBox.style.display = "none"
 	gameLoop()
+}
+
+const getRandomID = () => {
+	return Math.floor(Math.random() * (latestID + 1))
 }
 
 const guessCorrect = () => {
@@ -143,8 +219,9 @@ const guessCorrect = () => {
 }
 
 const gameLoop = async () => {
-	// TODO: Random movie ID for loadMovie()
-	await loadMovie(348)
+	// guessInputBox.style.display = "none"
+
+	await loadMovie()
 	loadImage()
 	guessInputBox.style.display = "block"
 	guessInputBox.focus()
