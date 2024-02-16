@@ -2,7 +2,15 @@ body,
 html {
     padding: 0;
     margin: 0;
+    font-family: Arial, Helvetica, sans-serif
 }
+
+/*@media only screen and (max-width:1200px) {
+    #laatikko {
+        background-color: antiquewhite;
+        padding: 0.5em;
+    }
+}*/
 
 #laatikko {
     background-color: antiquewhite;
@@ -19,4 +27,13 @@ html {
     max-width: 100%;
     height: auto;
     display: block;
+}
+
+#warning {
+    color: red;
+    font-weight: bold;
+}
+
+#about {
+    padding: 10px;
 }

@@ -5,10 +5,11 @@ let RATJson = {}
 let releaseYear
 let posterPath
 let latestID
-const loadingPicture = "./img/load_dummy2.png"
+const loadingPicture = "./img/loaddummy.jpg"
 const imageHandle = document.querySelector("#imageContainer img")
 const guessInputBox = document.querySelector("#guessInputField")
 const imageUrlBase = "https://image.tmdb.org/t/p/w1280"
+const showAnswer = document.querySelector("#showAnswer")
 
 //
 // DOMCONTENTLOADED
@@ -163,15 +164,27 @@ const addToStorageValue = (storageValue) => {
 	localStorage.setItem(storageValue, tmp)
 }
 
-// Handles stats for game.
-const handleAnswer = () => {
-	if (guessCorrect()) {
-		console.log("Correct!")
-		addToStorageValue("guessCorrect")
+const showAnswerResponse = (answer) => {
+	if (answer) {
+		showAnswer.textContent = "CORRECT!"
 	}
 	else {
-		console.log("Incorrect. The release year was " + releaseYear)
+		showAnswer.textContent = "Nope.. It's " + releaseYear
+	}
+	setTimeout(() => {
+		showAnswer.textContent = ""
+	}, 2000)
+}
+
+// Handles stats for game, prints answer to user
+const handleAnswer = () => {
+	if (guessCorrect()) {
+		addToStorageValue("guessCorrect")
+		showAnswerResponse(guessCorrect())
+	}
+	else {
 		addToStorageValue("guessIncorrect")
+		showAnswerResponse(guessCorrect())
 	}
 	addToStorageValue("guessTotal")
 
