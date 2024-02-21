@@ -5,16 +5,61 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<!-- Silence those annoying favicon error messages -->
-	<link rel="icon" href="./img/ico/tmp.ico" type="image/x-icon">
+	<link rel="icon" href="./img/ico/gty_icon.jpg" type="image/x-icon">
 	<link rel="stylesheet" href="css/style.css">
-	<title> Index </title>
+	<title>Guess the year!</title>
 </head>
 
 <body>
+	<div id="container">
+		<nav id="nav">
+			<ul>
+				<li><a href="./index.html">About</a></li>
+				<li><a href="./peli.html">Play the game</a></li>
+				<li><a href="./stats.html">Stats</a></li>
+			</ul>
+		</nav>
 
-	<h2>Testataan API-avaimet..</h2>
+		<div id="content">
+			<h3>What is this?</h3>
+			<p>This prototype game was created as a part of a course on basic frontend web development. The goal was to
+				use
+				HTML/CSS/JS to create a site with certain conditions like using an API.</p>
+			<h3>What is the game?</h3>
+			<p>The player is shown a random movie poster and has to guess the release year. Yes, quite basic.. but still
+				challenging to program with basically zero experience in HTML/CSS/JS. The game utilizes TMDB (The movie
+				database) in its queries.</p>
+			<h3>How to play?</h3>
+			<p>Quite simple; You just guess a year as four digits and hit enter! There is no mouse input on submit,
+				because I felt it was clumsy.. It's just way faster to use keypad and enter to shoot answers, even on a
+				TKL.
+				Stats are stored on browsers localStorage.</p>
+			<h3>Game is not loading..</h3>
+			<p>Even with over a million entries on TMDB, it is NOT quaranteed, that an ID is populated. Therefore some
+				of
+				the queries will return empty. Also not every movie has a poster or is suitable for this game (no adult
+				content). This means load times may be instant or seriously long waits.. You can check the browser log
+				to
+				see what is happening. It SHOULD hide the input field and show it only when conditions are met.</p>
 
-	<script type="module" src="js/run_tests.js"></script>
+			<p><span id="warning">Be warned though.. even if the game is supposed to have no adult content, some
+					adult entries bleed
+					through even when marked as non-adult! I have no control over these incorrect database
+					entries.</span>
+			</p>
+			<h3>Other non-useful stuff</h3>
+			<p>This was a school project, so time invested in this was limited as we have to submit our work on time.
+				One
+				resilient bug is still present, I did not successfully catch that. The game can get tangled on occasion,
+				maybe on async function or something related. You can just F5 for refresh.</p>
+			<p>Page colours checked with <a href="https://contrastchecker.com/">contrastchecker</a> </p>
+			<p>All non-TMDB images were created with free online AI image generators.</p>
+			<footer>
+				<p>Project on <a href="https://github.com/uhoney/KURSSI-web-sovellukset-lopputyo">GitHub</a></p>
+			</footer>
+		</div>
+
+	</div>
 </body>
 
 </html>

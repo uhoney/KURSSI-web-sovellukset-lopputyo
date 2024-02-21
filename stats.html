@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<!-- Silence those annoying favicon error messages -->
+	<link rel="icon" href="./img/ico/gty_icon.jpg" type="image/x-icon">
+	<link rel="stylesheet" href="css/style.css">
+	<title>Guess the year!</title>
+</head>
+
+<body>
+	<div id="container">
+		<nav id="nav">
+			<ul>
+				<li><a href="./index.html">About</a></li>
+				<li><a href="./peli.html">Play the game</a></li>
+				<li><a href="./stats.html">Stats</a></li>
+			</ul>
+		</nav>
+
+		<div id="content">
+			<p>Total posters guessed: <span id="guessTotal"></span></p>
+			<p>Correct: <span id="guessCorrect"></span></p>
+			<p>Incorrect: <span id="guessIncorrect"></span></p>
+
+			<button type="button" id="resetButton">Reset stats</button>
+
+		</div>
+	</div>
+	<script src="./js/stats.js"></script>
+</body>
+
+</html>
