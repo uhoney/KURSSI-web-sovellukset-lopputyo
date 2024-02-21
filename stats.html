@@ -11,21 +11,24 @@
 </head>
 
 <body>
-	<div id="laatikko">
-		<h2>Guess the year!</h2>
-		<a href="./index.html" class="button">About</a>
-		<a href="./peli.html" class="button">Play the game</a>
-		<a href="./stats.html" class="button">Statistics</a>
-	</div>
-	<div>
-		<p>Total posters guessed: <span id="guessTotal"></span></p>
-		<p>Correct: <span id="guessCorrect"></span></p>
-		<p>Incorrect: <span id="guessIncorrect"></span></p>
-	</div>
-	<div>
-		<button type="button" id="resetButton">Reset stats</button>
-	</div>
+	<div id="container">
+		<nav id="nav">
+			<ul>
+				<li><a href="./index.html">About</a></li>
+				<li><a href="./peli.html">Play the game</a></li>
+				<li><a href="./stats.html">Stats</a></li>
+			</ul>
+		</nav>
 
+		<div id="content">
+			<p>Total posters guessed: <span id="guessTotal"></span></p>
+			<p>Correct: <span id="guessCorrect"></span></p>
+			<p>Incorrect: <span id="guessIncorrect"></span></p>
+
+			<button type="button" id="resetButton">Reset stats</button>
+
+		</div>
+	</div>
 	<script src="./js/stats.js"></script>
 </body>
 
