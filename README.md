@@ -1,13 +1,14 @@
-# Vaihtoehtoinen leffavisa
-Web-sovellukset kurssin lopputyö. Tarkoituksena oli luoda web-sovellus/sivusto, jossa hyödynnetään HTML+CSS+JavaScriptiä. Yhtenä vaatimuksena oli myös hyödyntää jollain tapaa avointa dataa.
+# Guess the year!
+A simple game where you guess the release year of a movie by its poster.
 
-## Vaikeudet
-Miten saa API-avaimen ujutettua projektiin ilman, että sitä vahingossa puskee hubiin?
+## What is this
+School project on course basic frontend web development. The goal was to create a website using HTML/CSS/JS and possibly use an API. This project utilizes TMDB (The Movie DataBase) API.
 
-- [!IMPORTANT]
-- ## Tarkista API-avain!!
-- Luo tekstitiedosto 'apikey.txt' projektin juureen
-- Talleta oma tai saamasi API-avain luomaasi tiedostoon
-- Selaimen konsoli näyttää onko avain hyväksytty
+## Setup
+You need an APIkey for this project!
+- Create a file 'apikey.txt' in the root directory
+- Save your API key in the txt file (single line file)
+- Start with live server
+- Browser logs show if key is invalid / other errors as you start the game
 	* Firefox (Ctrl + Shift + K)
 	* Chrome (Shift + Ctrl + J)
