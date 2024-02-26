@@ -12,15 +12,14 @@
 
 <body>
 	<div id="container">
-		<nav id="nav">
-			<ul>
-				<li><a href="./index.html">About</a></li>
-				<li><a href="./peli.html">Play the game</a></li>
-				<li><a href="./stats.html">Stats</a></li>
-			</ul>
-		</nav>
-
 		<div id="content">
+			<nav id="nav">
+				<ul>
+					<li><a href="./index.html">About</a></li>
+					<li><a href="./peli.html">Play the game</a></li>
+					<li><a href="./stats.html">Stats</a></li>
+				</ul>
+			</nav>
 			<h3>What is this?</h3>
 			<p>This prototype game was created as a part of a course on basic frontend web development. The goal was to
 				use
@@ -35,6 +34,9 @@
 				TKL.
 				Stats are stored on browsers localStorage.</p>
 			<h3>Game is not loading..</h3>
+			<p>Read the README.md on github. Link is in the footer of this page. But here goes anyway;</p>
+			<p>1. Make sure you wrote your API-key inside apikey.txt on a single line</p>
+			<p>2. Check browser log for error messages.</p>
 			<p>Even with over a million entries on TMDB, it is NOT quaranteed, that an ID is populated. Therefore some
 				of
 				the queries will return empty. Also not every movie has a poster or is suitable for this game (no adult
@@ -52,7 +54,10 @@
 				One
 				resilient bug is still present, I did not successfully catch that. The game can get tangled on occasion,
 				maybe on async function or something related. You can just F5 for refresh.</p>
-			<p>Page colours checked with <a href="https://contrastchecker.com/">contrastchecker</a> </p>
+			<p>I like clear minimalistic interfaces. So, I didn't use center on everything and kept css-magic to a
+				minimum. You could argue that the poster should be centered, but that is just an opinion. I didn't like
+				the way it looked, so I kept it default left.</p>
+			<p>Page colours checked with <a href="https://contrastchecker.com/">contrastchecker</a></p>
 			<p>All non-TMDB images were created with free online AI image generators.</p>
 			<footer>
 				<p>Project on <a href="https://github.com/uhoney/KURSSI-web-sovellukset-lopputyo">GitHub</a></p>

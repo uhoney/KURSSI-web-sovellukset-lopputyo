@@ -14,14 +14,20 @@ html {
 }
 
 #container {
-    width: 50vw;
+    width: 60vw;
 }
 
-#nav {
+
+@media screen and (max-width: 600px) {
+    #container {
+        width: 80vw;
+    }
+}
+
+
+#nav ul,
+footer {
     width: 100%;
-}
-
-#nav ul {
     list-style-type: none;
     margin: 0;
     padding: 0;
@@ -54,10 +60,15 @@ h3 {
 }
 
 #imageContainer {
-
     background-color: #e9d5d0;
     max-width: 250px;
     padding: 10px;
+}
+
+@media screen and (max-height: 800px) {
+    #imageContainer {
+        width: 40vh;
+    }
 }
 
 #imageContainer img {
@@ -73,4 +84,5 @@ h3 {
 #warning {
     color: red;
     font-weight: bold;
+    text-decoration: underline;
 }
